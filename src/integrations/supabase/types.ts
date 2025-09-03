@@ -14,6 +14,102 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_processing_queue: {
+        Row: {
+          analysis_id: string | null
+          created_at: string
+          error_message: string | null
+          hive_id: string
+          id: string
+          image_url: string
+          priority: number
+          processing_end_time: string | null
+          processing_start_time: string | null
+          processing_type: string
+          progress: number | null
+          result_data: Json | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          analysis_id?: string | null
+          created_at?: string
+          error_message?: string | null
+          hive_id: string
+          id?: string
+          image_url: string
+          priority?: number
+          processing_end_time?: string | null
+          processing_start_time?: string | null
+          processing_type: string
+          progress?: number | null
+          result_data?: Json | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          analysis_id?: string | null
+          created_at?: string
+          error_message?: string | null
+          hive_id?: string
+          id?: string
+          image_url?: string
+          priority?: number
+          processing_end_time?: string | null
+          processing_start_time?: string | null
+          processing_type?: string
+          progress?: number | null
+          result_data?: Json | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      api_keys: {
+        Row: {
+          api_key: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          key_name: string
+          last_used_at: string | null
+          permissions: Json
+          rate_limit: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          api_key: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          key_name: string
+          last_used_at?: string | null
+          permissions?: Json
+          rate_limit?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          api_key?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          key_name?: string
+          last_used_at?: string | null
+          permissions?: Json
+          rate_limit?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       environmental_data: {
         Row: {
           air_quality_index: number | null
@@ -460,6 +556,7 @@ export type Database = {
           id: string
           location: string | null
           phone: string | null
+          role: string
           updated_at: string
           user_id: string
         }
@@ -471,6 +568,7 @@ export type Database = {
           id?: string
           location?: string | null
           phone?: string | null
+          role?: string
           updated_at?: string
           user_id: string
         }
@@ -482,6 +580,7 @@ export type Database = {
           id?: string
           location?: string | null
           phone?: string | null
+          role?: string
           updated_at?: string
           user_id?: string
         }
@@ -583,6 +682,48 @@ export type Database = {
         }
         Relationships: []
       }
+      system_notifications: {
+        Row: {
+          action_url: string | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          is_read: boolean
+          message: string
+          metadata: Json | null
+          notification_type: string
+          severity: string
+          title: string
+          user_id: string | null
+        }
+        Insert: {
+          action_url?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_read?: boolean
+          message: string
+          metadata?: Json | null
+          notification_type: string
+          severity?: string
+          title: string
+          user_id?: string | null
+        }
+        Update: {
+          action_url?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_read?: boolean
+          message?: string
+          metadata?: Json | null
+          notification_type?: string
+          severity?: string
+          title?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       weather_cache: {
         Row: {
           cached_at: string
@@ -615,10 +756,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_role: {
+        Args: { check_user_id: string }
+        Returns: string
+      }
+      has_role: {
+        Args: { check_user_id: string; required_role: string }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      user_role: "beekeeper" | "admin" | "moderator"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -745,6 +893,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      user_role: ["beekeeper", "admin", "moderator"],
+    },
   },
 } as const

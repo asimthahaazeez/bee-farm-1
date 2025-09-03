@@ -16,12 +16,33 @@ import {
   MapPin,
   BookOpen,
   BarChart3,
-  Megaphone
+  Megaphone,
+  LogOut,
+  Key,
+  Shield
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/components/auth/AuthProvider";
 import beeMascot from "@/assets/bee-mascot.png";
 
 const Navigation = () => {
+  const { user, signOut, loading } = useAuth();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   // Mock data for notification counts

@@ -119,4 +119,96 @@ export const DashboardSkeleton = () => {
   );
 };
 
-export default { WeatherSkeleton, HiveSkeleton, DashboardSkeleton };
+export const SocialPost = () => {
+  return (
+    <Card className="p-6 space-y-4">
+      <div className="flex items-start space-x-3">
+        <div className="h-12 w-12 bg-muted shimmer rounded-full"></div>
+        <div className="flex-1 space-y-2">
+          <div className="h-4 bg-muted shimmer rounded w-32"></div>
+          <div className="h-3 bg-muted shimmer rounded w-40"></div>
+        </div>
+        <div className="h-8 w-8 bg-muted shimmer rounded"></div>
+      </div>
+      
+      <div className="space-y-2">
+        <div className="h-4 bg-muted shimmer rounded w-full"></div>
+        <div className="h-4 bg-muted shimmer rounded w-3/4"></div>
+        <div className="h-4 bg-muted shimmer rounded w-1/2"></div>
+      </div>
+      
+      <div className="flex flex-wrap gap-2">
+        <div className="h-6 bg-muted shimmer rounded-full w-20"></div>
+        <div className="h-6 bg-muted shimmer rounded-full w-16"></div>
+        <div className="h-6 bg-muted shimmer rounded-full w-24"></div>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-2">
+        <div className="aspect-square bg-muted shimmer rounded-lg"></div>
+        <div className="aspect-square bg-muted shimmer rounded-lg"></div>
+      </div>
+      
+      <div className="flex items-center justify-between pt-2 border-t">
+        <div className="flex space-x-4">
+          <div className="h-8 bg-muted shimmer rounded w-16"></div>
+          <div className="h-8 bg-muted shimmer rounded w-16"></div>
+          <div className="h-8 bg-muted shimmer rounded w-16"></div>
+        </div>
+      </div>
+    </Card>
+  );
+};
+
+export const BeekeeperCard = () => {
+  return (
+    <Card className="p-6 space-y-4">
+      <div className="flex items-start space-x-3">
+        <div className="h-16 w-16 bg-muted shimmer rounded-full"></div>
+        <div className="flex-1 space-y-2">
+          <div className="flex items-center space-x-2">
+            <div className="h-5 bg-muted shimmer rounded w-32"></div>
+            <div className="h-4 w-4 bg-muted shimmer rounded"></div>
+          </div>
+          <div className="h-4 bg-muted shimmer rounded w-40"></div>
+          <div className="flex space-x-2">
+            <div className="h-4 bg-muted shimmer rounded w-8"></div>
+            <div className="h-4 bg-muted shimmer rounded w-12"></div>
+          </div>
+        </div>
+      </div>
+      
+      <div className="space-y-2">
+        <div className="h-4 bg-muted shimmer rounded w-full"></div>
+        <div className="h-4 bg-muted shimmer rounded w-3/4"></div>
+      </div>
+      
+      <div className="flex flex-wrap gap-2">
+        <div className="h-6 bg-muted shimmer rounded-full w-24"></div>
+        <div className="h-6 bg-muted shimmer rounded-full w-20"></div>
+        <div className="h-6 bg-muted shimmer rounded-full w-28"></div>
+      </div>
+      
+      <div className="grid grid-cols-3 gap-4 text-center">
+        <div className="space-y-1">
+          <div className="h-6 bg-muted shimmer rounded w-12 mx-auto"></div>
+          <div className="h-3 bg-muted shimmer rounded w-16 mx-auto"></div>
+        </div>
+        <div className="space-y-1">
+          <div className="h-6 bg-muted shimmer rounded w-8 mx-auto"></div>
+          <div className="h-3 bg-muted shimmer rounded w-12 mx-auto"></div>
+        </div>
+        <div className="space-y-1">
+          <div className="h-6 bg-muted shimmer rounded w-10 mx-auto"></div>
+          <div className="h-3 bg-muted shimmer rounded w-14 mx-auto"></div>
+        </div>
+      </div>
+      
+      <div className="flex gap-2">
+        <div className="flex-1 h-10 bg-muted shimmer rounded-lg"></div>
+        <div className="flex-1 h-10 bg-muted shimmer rounded-lg"></div>
+      </div>
+    </Card>
+  );
+};
+
+export default { WeatherSkeleton, HiveSkeleton, DashboardSkeleton, SocialPost, BeekeeperCard };

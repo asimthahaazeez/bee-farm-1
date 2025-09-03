@@ -1,11 +1,13 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import AnalyticsDashboard from "@/components/analytics/AnalyticsDashboard";
+import HiveHealthScore from "@/components/analytics/HiveHealthScore";
+import PLReportGenerator from "@/components/financial/PLReportGenerator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import KPICards from "@/components/analytics/KPICards";
 import SalesChart from "@/components/analytics/SalesChart";
 import ConversionFunnel from "@/components/analytics/ConversionFunnel";
 import CustomerAnalytics from "@/components/analytics/CustomerAnalytics";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const AnalyticsPage = () => {
   return (

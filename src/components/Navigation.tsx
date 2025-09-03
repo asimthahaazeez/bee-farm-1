@@ -1,27 +1,94 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
+  Bell, 
   Home, 
-  Cloud, 
-  Database, 
-  FileText, 
+  Activity, 
+  ShoppingCart, 
+  Menu, 
+  X, 
+  User, 
   Settings, 
-  Bell,
-  Menu,
-  X
+  Store,
+  ShoppingBag,
+  Users,
+  MapPin,
+  BookOpen,
+  BarChart3,
+  Megaphone
 } from "lucide-react";
-import { useState } from "react";
+import { Link } from "react-router-dom";
 import beeMascot from "@/assets/bee-mascot.png";
 
 const Navigation = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  // Mock data for notification counts
+  const pendingAnalyses = 2;
+  const cartItems = 3;
 
   const navItems = [
-    { icon: Home, label: "Dashboard", active: true },
-    { icon: Cloud, label: "Weather", notifications: 2 },
-    { icon: Database, label: "Hives", notifications: 1 },
-    { icon: FileText, label: "Logs" },
-    { icon: Settings, label: "Settings" }
+    { 
+      icon: Home, 
+      label: "Dashboard", 
+      href: "/",
+      notifications: 0
+    },
+    { 
+      icon: Activity, 
+      label: "Diagnostics", 
+      href: "/diagnostics",
+      notifications: pendingAnalyses
+    },
+    { 
+      icon: Users, 
+      label: "Community", 
+      href: "/community",
+      notifications: 0
+    },
+    {
+      icon: MapPin,
+      label: "Directory",
+      href: "/directory", 
+      notifications: 0
+    },
+    {
+      icon: BookOpen,
+      label: "Knowledge",
+      href: "/knowledge",
+      notifications: 0
+    },
+    { 
+      icon: ShoppingCart, 
+      label: "Marketplace", 
+      href: "/marketplace",
+      notifications: 0
+    },
+    { 
+      icon: Store, 
+      label: "Seller Hub", 
+      href: "/seller",
+      notifications: 2
+    },
+    { 
+      icon: BarChart3, 
+      label: "Analytics", 
+      href: "/analytics",
+      notifications: 0
+    },
+    {
+      icon: Megaphone,
+      label: "Ads",
+      href: "/ads",
+      notifications: 0
+    },
+    { 
+      icon: ShoppingBag, 
+      label: "Cart", 
+      href: "/cart",
+      notifications: cartItems
+    }
   ];
 
   return (
@@ -29,36 +96,33 @@ const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center gap-3">
+          <Link to="/" className="flex items-center gap-3">
             <img 
               src={beeMascot} 
               alt="BeeWise Logo" 
               className="w-8 h-8 bee-trail"
             />
             <span className="text-2xl font-bold text-dark-brown">BeeWise</span>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-6">
-            {navItems.map((item, index) => (
-              <Button
-                key={index}
-                variant={item.active ? "default" : "ghost"}
-                size="sm"
-                className={`relative flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 ${
-                  item.active 
-                    ? "bg-honey text-dark-brown hover:bg-honey-dark" 
-                    : "text-dark-brown/70 hover:text-dark-brown hover:bg-honey-light/20"
-                }`}
-              >
-                <item.icon className="w-4 h-4" />
-                <span className="font-medium">{item.label}</span>
-                {item.notifications && (
-                  <Badge className="ml-1 bg-amber text-dark-brown text-xs px-1.5 py-0.5 min-w-[20px] h-5">
-                    {item.notifications}
-                  </Badge>
-                )}
-              </Button>
+          <div className="hidden md:flex items-center gap-2">
+            {navItems.slice(0, 6).map((item, index) => (
+              <Link key={index} to={item.href}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="relative flex items-center gap-2 px-3 py-2 rounded-xl transition-all duration-300 text-dark-brown/70 hover:text-dark-brown hover:bg-honey-light/20"
+                >
+                  <item.icon className="w-4 h-4" />
+                  <span className="font-medium">{item.label}</span>
+                  {item.notifications > 0 && (
+                    <Badge className="ml-1 bg-amber text-dark-brown text-xs px-1.5 py-0.5 min-w-[20px] h-5">
+                      {item.notifications}
+                    </Badge>
+                  )}
+                </Button>
+              </Link>
             ))}
           </div>
 
@@ -103,24 +167,22 @@ const Navigation = () => {
           <div className="md:hidden py-4 border-t border-warm-gray/30 bg-white/95 backdrop-blur-md">
             <div className="space-y-2">
               {navItems.map((item, index) => (
-                <Button
-                  key={index}
-                  variant={item.active ? "default" : "ghost"}
-                  size="sm"
-                  className={`w-full justify-start gap-3 px-4 py-3 rounded-xl ${
-                    item.active 
-                      ? "bg-honey text-dark-brown" 
-                      : "text-dark-brown/70 hover:text-dark-brown hover:bg-honey-light/20"
-                  }`}
-                >
-                  <item.icon className="w-5 h-5" />
-                  <span className="font-medium">{item.label}</span>
-                  {item.notifications && (
-                    <Badge className="ml-auto bg-amber text-dark-brown text-xs">
-                      {item.notifications}
-                    </Badge>
-                  )}
-                </Button>
+                <Link key={index} to={item.href}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start gap-3 px-4 py-3 rounded-xl text-dark-brown/70 hover:text-dark-brown hover:bg-honey-light/20"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <item.icon className="w-5 h-5" />
+                    <span className="font-medium">{item.label}</span>
+                    {item.notifications > 0 && (
+                      <Badge className="ml-auto bg-amber text-dark-brown text-xs">
+                        {item.notifications}
+                      </Badge>
+                    )}
+                  </Button>
+                </Link>
               ))}
             </div>
             

@@ -70,7 +70,8 @@ const HiveManagement = () => {
   };
 
   const handleCreateHive = async (hiveData: any) => {
-    await createHive(hiveData);
+    if (!user?.id) return;
+    await createHive({ ...hiveData, user_id: user.id });
   };
 
   const handleUpdateHive = async (hiveData: any) => {

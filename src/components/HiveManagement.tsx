@@ -341,7 +341,8 @@ const HiveManagement = () => {
             open={showInspectionForm}
             onOpenChange={setShowInspectionForm}
             onSubmit={async (data) => {
-              await createLog(data);
+              if (!user?.id) return;
+              await createLog({ ...data, user_id: user.id });
             }}
             hiveId={inspectionHiveId}
             hiveName={hives.find(h => h.id === inspectionHiveId)?.name || ''}

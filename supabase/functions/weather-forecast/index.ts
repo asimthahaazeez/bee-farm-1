@@ -124,7 +124,7 @@ serve(async (req) => {
         weather_data: weatherData,
         forecast_data: forecast,
         cached_at: new Date().toISOString(),
-        expires_at: new Date(Date.now() + 60 * 60 * 1000).toISOString() // 1 hour
+        expires_at: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString() // 2 hours
       });
 
     console.log('Weather data fetched and cached successfully');

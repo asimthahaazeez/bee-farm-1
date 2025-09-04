@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import HiveAnalysis from "@/components/diagnostics/HiveAnalysis";
 import HiveManagement from "@/components/HiveManagement";
 import WeatherWidget from "@/components/weather/WeatherWidget";
+import { useHives } from "@/hooks/useHives";
+import { supabase } from "@/integrations/supabase/client";
+import { formatDistanceToNow } from "date-fns";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -19,7 +22,7 @@ import {
   Brain
 } from "lucide-react";
 
-interface Hive {
+interface HiveWithAnalysis {
   id: string;
   name: string;
   location: string;
@@ -31,33 +34,53 @@ interface Hive {
 const DiagnosticsPage = () => {
   const [selectedHive, setSelectedHive] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("analysis");
-  
-  const hives: Hive[] = [
-    {
-      id: '1',
-      name: 'Hive Alpha',
-      location: 'North Garden',
-      lastAnalysis: '2 days ago',
-      analysisCount: 15,
-      healthTrend: 'improving'
-    },
-    {
-      id: '2',
-      name: 'Hive Beta',
-      location: 'South Field',
-      lastAnalysis: '1 week ago',
-      analysisCount: 8,
-      healthTrend: 'stable'
-    },
-    {
-      id: '3',
-      name: 'Hive Gamma',
-      location: 'East Meadow',
-      lastAnalysis: '3 weeks ago',
-      analysisCount: 3,
-      healthTrend: 'declining'
-    }
-  ];
+  const [hivesWithAnalysis, setHivesWithAnalysis] = useState<HiveWithAnalysis[]>([]);
+  const { hives, loading } = useHives();
+
+  // Fetch analysis data for each hive
+  useEffect(() => {
+    const fetchAnalysisData = async () => {
+      if (!hives.length) return;
+
+      const hivesData = await Promise.all(
+        hives.map(async (hive) => {
+          // Get latest analysis and count
+          const { data: analyses } = await supabase
+            .from('hive_analyses')
+            .select('analysis_date, health_score')
+            .eq('hive_id', hive.id)
+            .order('analysis_date', { ascending: false });
+
+          const analysisCount = analyses?.length || 0;
+          const lastAnalysis = analyses?.[0]?.analysis_date
+            ? formatDistanceToNow(new Date(analyses[0].analysis_date), { addSuffix: true })
+            : undefined;
+
+          // Calculate health trend based on recent analyses
+          let healthTrend: 'improving' | 'stable' | 'declining' = 'stable';
+          if (analyses && analyses.length >= 2) {
+            const recent = analyses[0].health_score;
+            const previous = analyses[1].health_score;
+            if (recent > previous + 5) healthTrend = 'improving';
+            else if (recent < previous - 5) healthTrend = 'declining';
+          }
+
+          return {
+            id: hive.id,
+            name: hive.name,
+            location: hive.location || 'Unknown Location',
+            lastAnalysis,
+            analysisCount,
+            healthTrend
+          } as HiveWithAnalysis;
+        })
+      );
+
+      setHivesWithAnalysis(hivesData);
+    };
+
+    fetchAnalysisData();
+  }, [hives]);
 
   const mockAnalysisHistory = [
     {
@@ -174,8 +197,27 @@ const DiagnosticsPage = () => {
                   <h2 className="text-2xl font-semibold text-foreground mb-6">
                     Select a Hive to Analyze
                   </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {hives.map((hive) => (
+                  {loading ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {[1, 2, 3].map((i) => (
+                        <div key={i} className="p-6 border rounded-xl animate-pulse">
+                          <div className="h-6 bg-muted rounded mb-2"></div>
+                          <div className="h-4 bg-muted rounded w-1/2 mb-4"></div>
+                          <div className="space-y-2">
+                            <div className="h-3 bg-muted rounded"></div>
+                            <div className="h-3 bg-muted rounded w-3/4"></div>
+                          </div>
+                          <div className="h-10 bg-muted rounded mt-4"></div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : hivesWithAnalysis.length === 0 ? (
+                    <div className="text-center py-12">
+                      <p className="text-muted-foreground mb-4">No hives found. Create your first hive to get started!</p>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {hivesWithAnalysis.map((hive) => (
                       <Card 
                         key={hive.id} 
                         className="p-6 hover-lift cursor-pointer transition-all duration-300"
@@ -222,8 +264,9 @@ const DiagnosticsPage = () => {
                           Analyze This Hive
                         </Button>
                       </Card>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 
                 {/* Weather Widget Sidebar */}
@@ -334,7 +377,7 @@ const DiagnosticsPage = () => {
             {/* Hive Analysis Component */}
             <HiveAnalysis
               hiveId={selectedHive}
-              hiveName={hives.find(h => h.id === selectedHive)?.name || 'Unknown Hive'}
+              hiveName={hivesWithAnalysis.find(h => h.id === selectedHive)?.name || 'Unknown Hive'}
               analysisHistory={mockAnalysisHistory}
             />
             </div>

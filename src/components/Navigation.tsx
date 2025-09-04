@@ -19,7 +19,8 @@ import {
   Megaphone,
   LogOut,
   Key,
-  Shield
+  Shield,
+  Cloud
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -54,6 +55,12 @@ const Navigation = () => {
       icon: Home, 
       label: "Dashboard", 
       href: "/",
+      notifications: 0
+    },
+    { 
+      icon: Cloud, 
+      label: "Weather", 
+      href: "/weather",
       notifications: 0
     },
     { 

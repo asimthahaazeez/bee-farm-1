@@ -2,6 +2,7 @@ import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import HiveAnalysis from "@/components/diagnostics/HiveAnalysis";
+import WeatherWidget from "@/components/weather/WeatherWidget";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -140,58 +141,81 @@ const DiagnosticsPage = () => {
 
             {/* Hive Selection */}
             <div className="space-y-6">
-              <h2 className="text-2xl font-semibold text-foreground">
-                Select a Hive to Analyze
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {hives.map((hive) => (
-                  <Card 
-                    key={hive.id} 
-                    className="p-6 hover-lift cursor-pointer transition-all duration-300"
-                    onClick={() => setSelectedHive(hive.id)}
-                  >
-                    <div className="flex items-start justify-between mb-4">
-                      <div>
-                        <h3 className="text-xl font-semibold text-foreground mb-1">
-                          {hive.name}
-                        </h3>
-                        <p className="text-sm text-muted-foreground">
-                          {hive.location}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {getTrendIcon(hive.healthTrend)}
-                        <span className={`text-sm font-medium ${getTrendColor(hive.healthTrend)}`}>
-                          {hive.healthTrend}
-                        </span>
-                      </div>
-                    </div>
+              <div className="flex flex-col lg:flex-row gap-6">
+                <div className="flex-1">
+                  <h2 className="text-2xl font-semibold text-foreground mb-6">
+                    Select a Hive to Analyze
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {hives.map((hive) => (
+                      <Card 
+                        key={hive.id} 
+                        className="p-6 hover-lift cursor-pointer transition-all duration-300"
+                        onClick={() => setSelectedHive(hive.id)}
+                      >
+                        <div className="flex items-start justify-between mb-4">
+                          <div>
+                            <h3 className="text-xl font-semibold text-foreground mb-1">
+                              {hive.name}
+                            </h3>
+                            <p className="text-sm text-muted-foreground">
+                              {hive.location}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {getTrendIcon(hive.healthTrend)}
+                            <span className={`text-sm font-medium ${getTrendColor(hive.healthTrend)}`}>
+                              {hive.healthTrend}
+                            </span>
+                          </div>
+                        </div>
 
-                    <div className="space-y-3">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Last Analysis:</span>
-                        <span className="font-medium">
-                          {hive.lastAnalysis || 'Never'}
-                        </span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Total Analyses:</span>
-                        <span className="font-medium">{hive.analysisCount}</span>
-                      </div>
-                    </div>
+                        <div className="space-y-3">
+                          <div className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">Last Analysis:</span>
+                            <span className="font-medium">
+                              {hive.lastAnalysis || 'Never'}
+                            </span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">Total Analyses:</span>
+                            <span className="font-medium">{hive.analysisCount}</span>
+                          </div>
+                        </div>
 
-                    <Button 
-                      className="w-full mt-4 bg-honey text-dark-brown hover:bg-honey-dark hover:text-cream"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedHive(hive.id);
-                      }}
-                    >
-                      <Camera className="w-4 h-4 mr-2" />
-                      Analyze This Hive
-                    </Button>
+                        <Button 
+                          className="w-full mt-4 bg-honey text-dark-brown hover:bg-honey-dark hover:text-cream"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedHive(hive.id);
+                          }}
+                        >
+                          <Camera className="w-4 h-4 mr-2" />
+                          Analyze This Hive
+                        </Button>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Weather Widget Sidebar */}
+                <div className="lg:w-80">
+                  <h3 className="text-lg font-semibold text-foreground mb-4">
+                    Current Conditions
+                  </h3>
+                  <WeatherWidget compact={false} showRecommendation={true} />
+                  <Card className="mt-4 p-4 bg-honey-light/10 border-honey/20">
+                    <div className="text-sm space-y-2">
+                      <h4 className="font-semibold text-honey-dark">Analysis Tips:</h4>
+                      <ul className="text-muted-foreground space-y-1">
+                        <li>• Best lighting: Natural daylight</li>
+                        <li>• Avoid shadows on combs</li>
+                        <li>• Include frame edges for scale</li>
+                        <li>• Multiple angles help accuracy</li>
+                      </ul>
+                    </div>
                   </Card>
-                ))}
+                </div>
               </div>
             </div>
 

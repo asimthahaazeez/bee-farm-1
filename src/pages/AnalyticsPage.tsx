@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import AnalyticsDashboard from "@/components/analytics/AnalyticsDashboard";
 import HiveHealthScore from "@/components/analytics/HiveHealthScore";
 import PLReportGenerator from "@/components/financial/PLReportGenerator";
+import WeatherWidget from "@/components/weather/WeatherWidget";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import KPICards from "@/components/analytics/KPICards";
 import SalesChart from "@/components/analytics/SalesChart";
@@ -36,9 +37,15 @@ const AnalyticsPage = () => {
 
             <TabsContent value="overview" className="space-y-6">
               <KPICards />
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <SalesChart />
-                <ConversionFunnel />
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-2 space-y-6">
+                  <SalesChart />
+                  <ConversionFunnel />
+                </div>
+                <div className="space-y-6">
+                  <WeatherWidget compact={false} showRecommendation={true} />
+                  <HiveHealthScore />
+                </div>
               </div>
               <AnalyticsDashboard />
             </TabsContent>

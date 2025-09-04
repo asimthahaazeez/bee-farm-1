@@ -4,37 +4,91 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Bell, AlertTriangle, Thermometer, Droplets, Wind, Sun } from "lucide-react";
+import { useWeatherData } from "@/hooks/useWeatherData";
+import { useState, useEffect } from "react";
 
-const WeatherAlerts = () => {
-  const alerts = [
-    {
-      id: 1,
-      type: "high",
-      icon: AlertTriangle,
-      title: "High Temperature Warning",
-      description: "Expected temperatures above 35°C this afternoon. Consider providing extra ventilation for hives.",
-      time: "2 hours ago",
-      priority: "high" as const,
-    },
-    {
-      id: 2,
-      type: "medium",
-      icon: Droplets,
-      title: "Rain Expected",
-      description: "Light rain forecasted for tomorrow morning. Reduced foraging activity expected.",
-      time: "4 hours ago",
-      priority: "medium" as const,
-    },
-    {
-      id: 3,
-      type: "low",
-      icon: Wind,
-      title: "Windy Conditions",
-      description: "Strong winds (25+ mph) expected this evening. Monitor hive stability.",
-      time: "1 day ago",
-      priority: "low" as const,
-    },
-  ];
+interface WeatherAlert {
+  id: string;
+  type: string;
+  icon: any;
+  title: string;
+  description: string;
+  time: string;
+  priority: 'high' | 'medium' | 'low';
+}
+
+interface LocationPickerProps {
+  location?: string;
+  lat?: number;
+  lon?: number;
+}
+
+const WeatherAlerts = ({ location, lat, lon }: LocationPickerProps) => {
+  const { weatherData, loading } = useWeatherData(location, lat, lon);
+  const [alerts, setAlerts] = useState<WeatherAlert[]>([]);
+
+  // Generate alerts based on real weather data
+  useEffect(() => {
+    if (!weatherData) return;
+
+    const newAlerts: WeatherAlert[] = [];
+    const { current, hourly } = weatherData;
+
+    // High temperature alert
+    if (current.temperature > 35) {
+      newAlerts.push({
+        id: 'temp-high',
+        type: 'high',
+        icon: AlertTriangle,
+        title: 'High Temperature Warning',
+        description: `Current temperature is ${current.temperature}°C. Consider providing extra ventilation for hives.`,
+        time: 'Now',
+        priority: 'high'
+      });
+    }
+
+    // Rain expected alert
+    const rainInNext6Hours = hourly.slice(0, 2).some(h => h.condition.includes('rain'));
+    if (rainInNext6Hours) {
+      newAlerts.push({
+        id: 'rain',
+        type: 'medium',
+        icon: Droplets,
+        title: 'Rain Expected',
+        description: 'Rain forecasted in the next few hours. Reduced foraging activity expected.',
+        time: 'Next 6 hours',
+        priority: 'medium'
+      });
+    }
+
+    // High wind alert
+    if (current.windSpeed > 25) {
+      newAlerts.push({
+        id: 'wind',
+        type: 'low',
+        icon: Wind,
+        title: 'Windy Conditions',
+        description: `Strong winds (${current.windSpeed} mph) detected. Monitor hive stability.`,
+        time: 'Now',
+        priority: 'low'
+      });
+    }
+
+    // Low temperature alert for bee activity
+    if (current.temperature < 10) {
+      newAlerts.push({
+        id: 'temp-low',
+        type: 'medium',
+        icon: Thermometer,
+        title: 'Low Temperature Alert',
+        description: `Temperature is ${current.temperature}°C. Bees may cluster in hives.`,
+        time: 'Now',
+        priority: 'medium'
+      });
+    }
+
+    setAlerts(newAlerts);
+  }, [weatherData]);
 
   const alertSettings = [
     {
@@ -91,26 +145,39 @@ const WeatherAlerts = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {alerts.map((alert) => (
-              <div key={alert.id} className="flex items-start gap-3 p-4 rounded-lg border border-border/50 hover:bg-muted/30 transition-colors">
-                <div className={`p-2 rounded-lg ${getPriorityColor(alert.priority)}/20`}>
-                  <alert.icon className={`w-4 h-4 ${getPriorityColor(alert.priority).replace('bg-', 'text-')}`} />
-                </div>
-                <div className="flex-1 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-semibold text-dark-brown">{alert.title}</h4>
-                    <Badge variant="outline" className={`${getPriorityColor(alert.priority)}/20 border-${getPriorityColor(alert.priority).replace('bg-', '')}/30`}>
-                      {alert.priority}
-                    </Badge>
+            {loading ? (
+              <div className="space-y-3">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="animate-pulse">
+                    <div className="h-16 bg-muted rounded-lg"></div>
                   </div>
-                  <p className="text-sm text-muted-foreground">{alert.description}</p>
-                  <p className="text-xs text-muted-foreground">{alert.time}</p>
-                </div>
+                ))}
               </div>
-            ))}
-            <Button variant="outline" className="w-full">
-              View All Alerts
-            </Button>
+            ) : alerts.length > 0 ? (
+              alerts.map((alert) => (
+                <div key={alert.id} className="flex items-start gap-3 p-4 rounded-lg border border-border/50 hover:bg-muted/30 transition-colors">
+                  <div className={`p-2 rounded-lg ${getPriorityColor(alert.priority)}/20`}>
+                    <alert.icon className={`w-4 h-4 ${getPriorityColor(alert.priority).replace('bg-', 'text-')}`} />
+                  </div>
+                  <div className="flex-1 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-semibold text-dark-brown">{alert.title}</h4>
+                      <Badge variant="outline" className={`${getPriorityColor(alert.priority)}/20 border-${getPriorityColor(alert.priority).replace('bg-', '')}/30`}>
+                        {alert.priority}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{alert.description}</p>
+                    <p className="text-xs text-muted-foreground">{alert.time}</p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="text-center py-8">
+                <Bell className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                <p className="text-muted-foreground">No active weather alerts</p>
+                <p className="text-sm text-muted-foreground">Current conditions are safe for your hives</p>
+              </div>
+            )}
           </CardContent>
         </Card>
 

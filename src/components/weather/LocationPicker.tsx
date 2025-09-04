@@ -5,8 +5,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Search, Crosshair } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
-const LocationPicker = () => {
-  const [location, setLocation] = useState("New York, NY");
+interface LocationPickerProps {
+  onLocationChange?: (location: string, lat?: number, lon?: number) => void;
+}
+
+const LocationPicker = ({ onLocationChange }: LocationPickerProps) => {
+  const [location, setLocation] = useState("Default Location");
   const [isEditing, setIsEditing] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const { toast } = useToast();
@@ -15,6 +19,7 @@ const LocationPicker = () => {
     if (searchValue.trim()) {
       setLocation(searchValue);
       setIsEditing(false);
+      onLocationChange?.(searchValue);
       toast({
         title: "Location Updated",
         description: `Weather data will now show for ${searchValue}`,
@@ -27,7 +32,9 @@ const LocationPicker = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          setLocation(`${latitude.toFixed(2)}, ${longitude.toFixed(2)}`);
+          const locationString = `${latitude.toFixed(2)}, ${longitude.toFixed(2)}`;
+          setLocation(locationString);
+          onLocationChange?.(locationString, latitude, longitude);
           toast({
             title: "Location Detected",
             description: "Using your current location for weather data",

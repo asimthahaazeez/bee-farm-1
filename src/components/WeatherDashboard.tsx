@@ -153,8 +153,8 @@ const WeatherDashboard = () => {
               <Card className="p-6 text-center hover-lift bg-white/80 backdrop-blur-sm">
                 <Thermometer className="w-8 h-8 text-amber mx-auto mb-3" />
                 <h3 className="text-lg font-semibold text-dark-brown mb-1">Temperature</h3>
-                <p className="text-3xl font-bold text-dark-brown">{weatherData.current.temperature}°F</p>
-                <p className="text-sm text-dark-brown/60">Feels like {weatherData.current.feelsLike}°F</p>
+                <p className="text-3xl font-bold text-dark-brown">{weatherData.current.temperature}°C</p>
+                <p className="text-sm text-dark-brown/60">Feels like {weatherData.current.feelsLike}°C</p>
               </Card>
               
               <Card className="p-6 text-center hover-lift bg-white/80 backdrop-blur-sm">
@@ -167,14 +167,14 @@ const WeatherDashboard = () => {
               <Card className="p-6 text-center hover-lift bg-white/80 backdrop-blur-sm">
                 <Wind className="w-8 h-8 text-sage mx-auto mb-3" />
                 <h3 className="text-lg font-semibold text-dark-brown mb-1">Wind Speed</h3>
-                <p className="text-3xl font-bold text-dark-brown">{weatherData.current.windSpeed}mph</p>
-                <p className="text-sm text-dark-brown/60">{getWindStatus(weatherData.current.windSpeed)}</p>
+                 <p className="text-3xl font-bold text-dark-brown">{weatherData.current.windSpeed} km/h</p>
+                 <p className="text-sm text-dark-brown/60">{getWindStatus(weatherData.current.windSpeed)}</p>
               </Card>
               
               <Card className="p-6 text-center hover-lift bg-white/80 backdrop-blur-sm">
                 <Eye className="w-8 h-8 text-honey mx-auto mb-3" />
                 <h3 className="text-lg font-semibold text-dark-brown mb-1">Visibility</h3>
-                <p className="text-3xl font-bold text-dark-brown">{weatherData.current.visibility}mi</p>
+                <p className="text-3xl font-bold text-dark-brown">{weatherData.current.visibility} km</p>
                 <p className="text-sm text-dark-brown/60">
                   {weatherData.current.visibility >= 10 ? 'Excellent' : 
                    weatherData.current.visibility >= 5 ? 'Good' : 'Limited'}
@@ -222,7 +222,7 @@ const WeatherDashboard = () => {
                     icon={hour.icon} 
                     className="w-8 h-8 mx-auto mb-3 text-amber-dark" 
                   />
-                  <p className="text-xl font-bold text-dark-brown mb-1">{hour.temp}°</p>
+                  <p className="text-xl font-bold text-dark-brown mb-1">{hour.temp}°C</p>
                   <p className="text-xs text-dark-brown/60 mb-2 capitalize">{hour.condition}</p>
                   <div className="space-y-1 text-xs text-dark-brown/60">
                     <div className="flex items-center justify-center gap-1">
@@ -231,7 +231,7 @@ const WeatherDashboard = () => {
                     </div>
                     <div className="flex items-center justify-center gap-1">
                       <Wind className="w-3 h-3" />
-                      <span>{hour.windSpeed}mph</span>
+                      <span>{hour.windSpeed} km/h</span>
                     </div>
                   </div>
                 </div>

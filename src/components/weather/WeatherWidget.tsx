@@ -80,10 +80,10 @@ const WeatherWidget = ({ compact = false, showRecommendation = true }: WeatherWi
               <Droplets className="w-3 h-3" />
               {weatherData.current.humidity}%
             </div>
-            <div className="flex items-center gap-1">
-              <Wind className="w-3 h-3" />
-              {weatherData.current.windSpeed} mph
-            </div>
+             <div className="flex items-center gap-1">
+               <Wind className="w-3 h-3" />
+               {weatherData.current.windSpeed} km/h
+             </div>
           </div>
           {showRecommendation && weatherData.aiRecommendation && (
             <div className="mt-3 pt-3 border-t border-border/30">
@@ -137,16 +137,16 @@ const WeatherWidget = ({ compact = false, showRecommendation = true }: WeatherWi
               <p className="text-sm font-medium">{weatherData.current.humidity}%</p>
               <p className="text-xs text-muted-foreground">Humidity</p>
             </div>
-            <div className="text-center p-2 rounded-lg bg-white/30">
-              <Wind className="w-4 h-4 mx-auto mb-1 text-sage-dark" />
-              <p className="text-sm font-medium">{weatherData.current.windSpeed} mph</p>
-              <p className="text-xs text-muted-foreground">Wind</p>
-            </div>
-            <div className="text-center p-2 rounded-lg bg-white/30">
-              <Eye className="w-4 h-4 mx-auto mb-1 text-amber-dark" />
-              <p className="text-sm font-medium">{weatherData.current.visibility} mi</p>
-              <p className="text-xs text-muted-foreground">Visibility</p>
-            </div>
+             <div className="text-center p-2 rounded-lg bg-white/30">
+               <Wind className="w-4 h-4 mx-auto mb-1 text-sage-dark" />
+               <p className="text-sm font-medium">{weatherData.current.windSpeed} km/h</p>
+               <p className="text-xs text-muted-foreground">Wind</p>
+             </div>
+             <div className="text-center p-2 rounded-lg bg-white/30">
+               <Eye className="w-4 h-4 mx-auto mb-1 text-amber-dark" />
+               <p className="text-sm font-medium">{weatherData.current.visibility} km</p>
+               <p className="text-xs text-muted-foreground">Visibility</p>
+             </div>
             <div className="text-center p-2 rounded-lg bg-white/30">
               <Thermometer className="w-4 h-4 mx-auto mb-1 text-honey-dark" />
               <p className="text-sm font-medium">{weatherData.current.feelsLike}°C</p>

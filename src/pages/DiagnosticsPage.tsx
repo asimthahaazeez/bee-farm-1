@@ -2,17 +2,21 @@ import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import HiveAnalysis from "@/components/diagnostics/HiveAnalysis";
+import HiveManagement from "@/components/HiveManagement";
 import WeatherWidget from "@/components/weather/WeatherWidget";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Activity,
   Camera,
   TrendingUp,
   AlertTriangle,
   Eye,
-  Download
+  Download,
+  Settings,
+  Brain
 } from "lucide-react";
 
 interface Hive {
@@ -26,6 +30,7 @@ interface Hive {
 
 const DiagnosticsPage = () => {
   const [selectedHive, setSelectedHive] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState("analysis");
   
   const hives: Hive[] = [
     {
@@ -95,7 +100,30 @@ const DiagnosticsPage = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       <main className="container mx-auto px-4 py-8">
-        {!selectedHive ? (
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h1 className="text-4xl font-bold text-foreground mb-2">
+                Hive Management & Diagnostics
+              </h1>
+              <p className="text-lg text-muted-foreground">
+                Complete hive monitoring, AI analysis, and management tools
+              </p>
+            </div>
+            <TabsList className="grid w-fit grid-cols-2">
+              <TabsTrigger value="analysis" className="flex items-center gap-2">
+                <Brain className="w-4 h-4" />
+                AI Analysis
+              </TabsTrigger>
+              <TabsTrigger value="management" className="flex items-center gap-2">
+                <Settings className="w-4 h-4" />
+                Hive Management
+              </TabsTrigger>
+            </TabsList>
+          </div>
+
+          <TabsContent value="analysis" className="space-y-6">
+            {!selectedHive ? (
           <div className="space-y-8">
             {/* Header */}
             <div className="text-center space-y-4">
@@ -309,8 +337,14 @@ const DiagnosticsPage = () => {
               hiveName={hives.find(h => h.id === selectedHive)?.name || 'Unknown Hive'}
               analysisHistory={mockAnalysisHistory}
             />
-          </div>
-        )}
+            </div>
+          )}
+          </TabsContent>
+
+          <TabsContent value="management" className="space-y-6">
+            <HiveManagement />
+          </TabsContent>
+        </Tabs>
       </main>
       <Footer />
     </div>

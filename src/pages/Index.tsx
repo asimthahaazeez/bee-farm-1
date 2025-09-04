@@ -1,7 +1,9 @@
 import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
-import WeatherDashboard from "@/components/WeatherDashboard";
-import HiveManagement from "@/components/HiveManagement";
+import FeatureShowcase from "@/components/landing/FeatureShowcase";
+import LiveStatsPreview from "@/components/landing/LiveStatsPreview";
+import TestimonialsSection from "@/components/landing/TestimonialsSection";
+import InteractiveCTA from "@/components/landing/InteractiveCTA";
 import Footer from "@/components/Footer";
 
 const Index = () => {
@@ -10,8 +12,10 @@ const Index = () => {
       <Navigation />
       <main>
         <HeroSection />
-        <WeatherDashboard />
-        <HiveManagement />
+        <FeatureShowcase />
+        <LiveStatsPreview />
+        <TestimonialsSection />
+        <InteractiveCTA />
       </main>
       <Footer />
     </div>
